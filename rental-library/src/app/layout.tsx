@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Rental Books Library",
+  title: "Books Rental Library | Bookish Bliss",
   description: "Online Rental Books Library",
 };
 
