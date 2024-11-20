@@ -1,6 +1,19 @@
 import SharedLayout from "./components/SharedLayout";
-import books_by_genre from '../../data/mock_data.json'
+import books_by_genre from '../../data/mock_data.json' 
 import GenreSection from "./components/GenreSection";
+
+type Book = {
+  id: number;
+  title: string;
+  author: string;
+  imageUrl: string;
+};
+
+type BooksByGenre = {
+  [genre: string]: Book[]; // Index signature allowing dynamic string keys
+};
+
+const typedBooksByGenre = books_by_genre as BooksByGenre;
 
 export default function Home() {
   return (
@@ -14,8 +27,8 @@ export default function Home() {
             Your one-stop shop for renting books online.
           </p>
         </div>
-        {Object.keys(books_by_genre).map((genre) => (
-          <GenreSection key={genre} genre={genre} books={books_by_genre[genre]} />
+        {Object.keys(typedBooksByGenre).map((genre) => (
+          <GenreSection key={genre} genre={genre} books={typedBooksByGenre[genre]} />
         ))}
       </div>
     </SharedLayout>
