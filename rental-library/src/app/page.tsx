@@ -10,7 +10,7 @@ type Book = {
 };
 
 type BooksByGenre = {
-  [genre: string]: Book[]; // Index signature allowing dynamic string keys
+  [genre: string]: Book[];
 };
 
 const typedBooksByGenre = books_by_genre as BooksByGenre;
@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <SharedLayout>
       <div className="flex-grow flex flex-col items-center justify-center p-8 md:p-16">
-        <div className="bg-cover bg-center bg-local h-96 bg- w-full pb-4" style={{ backgroundImage: `url(/background.jpg)` }}>
+        <div className="bg-cover bg-center bg-local h-96 w-full pb-4" style={{ backgroundImage: `url(/background.jpg)` }}>
           <h1 className="text-3xl md:text-4xl font-bold items-center justify-center">
             Rental Booking Library
           </h1>

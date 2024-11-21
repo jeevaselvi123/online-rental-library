@@ -1,5 +1,6 @@
-"use client";
+"use client"
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function AuthForm({ is_login }: { is_login: boolean }) {
     const [form_data, set_form_data] = useState({
@@ -8,19 +9,51 @@ function AuthForm({ is_login }: { is_login: boolean }) {
         confirm_password: "",
     });
 
+    const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_form_data({ ...form_data, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission here, e.g., send data to backend
+        is_login ? handleLoginSubmit(e) : handleSignUpSubmit(e);
         console.log(form_data);
         set_form_data({
             email: "",
             password: "",
             confirm_password: "",
         })
+    };
+
+    const handleSignUpSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const response = await fetch('http://localhost:5000/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form_data),
+        });
+
+        if (response.ok) {
+            router.push('/');
+        } else {
+            alert('Registration failed');
+        }
+    };
+
+    const handleLoginSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form_data),
+        });
+
+        if (response.ok) {
+            // alert('Registration successful');
+            router.push('/');
+        } else {
+            alert('Registration failed');
+        }
     };
 
     return (
@@ -73,8 +106,8 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                     <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="confirm-password"
-                        type="confirm-password"
-                        name="confirm-password"
+                        type="password"
+                        name="confirm_password"
                         placeholder="******"
                         value={form_data.confirm_password}
                         onChange={handleChange}
