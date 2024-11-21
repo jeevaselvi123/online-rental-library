@@ -16,8 +16,12 @@ function AuthForm({ is_login }: { is_login: boolean }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        is_login ? handleLoginSubmit(e) : handleSignUpSubmit(e);
-        console.log(form_data);
+        if(is_login) {
+            handleLoginSubmit(e)
+        }
+        else{
+            handleSignUpSubmit(e)
+        }
         set_form_data({
             email: "",
             password: "",
