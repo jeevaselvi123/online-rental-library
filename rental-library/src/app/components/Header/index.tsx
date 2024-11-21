@@ -23,7 +23,7 @@ export default function Header() {
               placeholder="What are you looking for?"
               value={search_term}
               onChange={handle_search}
-              className="border border-gray-300 hover:border-blue-700 rounded-xl p-2 pl-4 w-full"
+              className="border border-gray-300 hover:border-blue-700 rounded-xl shadow-md p-2 pl-4 w-full"
             />
             <SearchIcon className="absolute right-3 top-2.5 text-gray-400" />
           </div>

@@ -1,0 +1,174 @@
+{
+  "Fiction": [
+    {
+      "id": 1,
+      "title": "The Lord of the Rings",
+      "author": "J.R.R. Tolkien",
+      "imageUrl": "https://example.com/book1.jpg"
+    },
+    {
+      "id": 2,
+      "title": "The Harry Potter Series",
+      "author": "J.K. Rowling",
+      "imageUrl": "https://example.com/book2.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "imageUrl": "https://example.com/book3.jpg"
+    },
+    {
+      "id": 4,
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "imageUrl": "https://example.com/book4.jpg"
+    },
+    {
+      "id": 5,
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "imageUrl": "https://example.com/book5.jpg"
+    },
+    {
+      "id": 6,
+      "title": "1984",
+      "author": "George Orwell",
+      "imageUrl": "https://example.com/book6.jpg"
+    },
+    {
+      "id": 7,
+      "title": "The Hitchhiker's Guide to the Galaxy",
+      "author": "Douglas Adams",
+      "imageUrl": "https://example.com/book7.jpg"
+    }
+  ],
+  "Non-Fiction": [
+    {
+      "id": 8,
+      "title": "Sapiens: A Brief History of Humankind",
+      "author": "Yuval Noah Harari",
+      "imageUrl": "https://example.com/book8.jpg"
+    },
+    {
+      "id": 9,
+      "title": "Thinking, Fast and Slow",
+      "author": "Daniel Kahneman",
+      "imageUrl": "https://example.com/book9.jpg"
+    },
+    {
+      "id": 10,
+      "title": "Quiet: The Power of Introverts in a World That Can't Stop Talking",
+      "author": "Susan Cain",
+      "imageUrl": "https://example.com/book10.jpg"
+    },
+    {
+      "id": 11,
+      "title": "The 7 Habits of Highly Effective People",
+      "author": "Stephen R. Covey",
+      "imageUrl": "https://example.com/book11.jpg"
+    },
+    {
+      "id": 12,
+      "title": "Man's Search for Meaning",
+      "author": "Viktor Frankl",
+      "imageUrl": "https://example.com/book12.jpg"
+    }
+  ],
+  "Science Fiction": [
+    {
+      "id": 13,
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "imageUrl": "https://example.com/book13.jpg"
+    },
+    {
+      "id": 14,
+      "title": "Neuromancer",
+      "author": "William Gibson",
+      "imageUrl": "https://example.com/book14.jpg"
+    },
+    {
+      "id": 15,
+      "title": "The Foundation Trilogy",
+      "author": "Isaac Asimov",
+      "imageUrl": "https://example.com/book15.jpg"
+    },
+    {
+      "id": 16,
+      "title": "Ender's Game",
+      "author": "Orson Scott Card",
+      "imageUrl": "https://example.com/book16.jpg"
+    },
+    {
+      "id": 17,
+      "title": "Snow Crash",
+      "author": "Neal Stephenson",
+      "imageUrl": "https://example.com/book17.jpg"
+    }
+  ],
+  "Fantasy": [
+    {
+      "id": 18,
+      "title": "The Wheel of Time",
+      "author": "Robert Jordan",
+      "imageUrl": "https://example.com/book18.jpg"
+    },
+    {
+      "id": 19,
+      "title": "The Chronicles of Narnia",
+      "author": "C.S. Lewis",
+      "imageUrl": "https://example.com/book19.jpg"
+    },
+    {
+      "id": 20,
+      "title": "The Dresden Files",
+      "author": "Jim Butcher",
+      "imageUrl": "https://example.com/book20.jpg"
+    },
+    {
+      "id": 21,
+      "title": "The Mistborn Trilogy",
+      "author": "Brandon Sanderson",
+      "imageUrl": "https://example.com/book21.jpg"
+    },
+    {
+      "id": 22,
+      "title": "The Stormlight Archive",
+      "author": "Brandon Sanderson",
+      "imageUrl": "https://example.com/book22.jpg"
+    }
+  ],
+  "Mystery": [
+    {
+      "id": 23,
+      "title": "And Then There Were None",
+      "author": "Agatha Christie",
+      "imageUrl": "https://example.com/book23.jpg"
+    },
+    {
+      "id": 24,
+      "title": "The Girl with the Dragon Tattoo",
+      "author": "Stieg Larsson",
+      "imageUrl": "https://example.com/book24.jpg"
+    },
+    {
+      "id": 25,
+      "title": "Gone Girl",
+      "author": "Gillian Flynn",
+      "imageUrl": "https://example.com/book25.jpg"
+    },
+    {
+      "id": 26,
+      "title": "The Silent Patient",
+      "author": "Alex Michaelides",
+      "imageUrl": "https://example.com/book26.jpg"
+    },
+    {
+      "id": 27,
+      "title": "The Da Vinci Code",
+      "author": "Dan Brown",
+      "imageUrl": "https://example.com/book27.jpg"
+    }
+  ]
+}
