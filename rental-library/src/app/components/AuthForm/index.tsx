@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { sign_up, login } from '../../../api/auth';
 
 function AuthForm({ is_login }: { is_login: boolean }) {
     const [form_data, set_form_data] = useState({
@@ -25,87 +26,66 @@ function AuthForm({ is_login }: { is_login: boolean }) {
     const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     const PASSWORD_MIN_LENGTH = 6;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(is_login) {
-            handleLoginSubmit(e)
-        }
-        else{
-            handleSignUpSubmit(e)
-        }
-        set_form_data({
-            email: "",
-            password: "",
-            confirm_password: "",
-        })
-    };
 
+        try {
+            const response = is_login
+                ? await login(form_data)
+                : await sign_up(form_data);
+
+            if (response?.user) {
+                router.push('/');
+            } else {
+                console.error('Unexpected Error Occurred!', response);
+            }
+
+        } catch (error) {
+            console.error('An error occurred during submission:', error);
+            alert('An error occurred. Please try again later.');
+        } finally {
+            // Reset form data
+            set_form_data({
+                email: "",
+                password: "",
+                confirm_password: "",
+            });
+        }
+    };
     useEffect(() => {
-        const error_data: {email: string, password:string, confirm_password: string} = {email: '', password:'', confirm_password:''};
+        const error_data: { email: string, password: string, confirm_password: string } = { email: '', password: '', confirm_password: '' };
 
         const validate_email = () => {
-            if(form_data.email && !EMAIL_REGEX.test(form_data.email)){
+            if (form_data.email && !EMAIL_REGEX.test(form_data.email)) {
                 error_data.email = 'Invalid email format';
             }
-            else{
-                error_data.email ='';
+            else {
+                error_data.email = '';
             }
         }
 
         const validate_password = () => {
-            if (form_data.password && form_data.password.length < PASSWORD_MIN_LENGTH ){
+            if (form_data.password && form_data.password.length < PASSWORD_MIN_LENGTH) {
                 error_data.password = `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
             }
-            else{
+            else {
                 error_data.password = '';
             }
         }
 
         const validate_confirm_password = () => {
-            if(form_data.password && form_data.confirm_password && form_data.password === form_data.confirm_password){
+            if (form_data.password !== form_data.confirm_password) {
                 error_data.confirm_password = "Passwords do not match";
-            }
-            else{
+            } else {
                 error_data.confirm_password = '';
             }
-        }
+        };
         validate_email();
         validate_password();
         validate_confirm_password();
 
         set_error_data(error_data);
     }, [form_data]);
-
-    const handleSignUpSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form_data),
-        });
-
-        if (response.ok) {
-            router.push('/');
-        } else {
-            alert('Registration failed');
-        }
-    };
-
-    const handleLoginSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form_data),
-        });
-
-        if (response.ok) {
-            // alert('Registration successful');
-            router.push('/');
-        } else {
-            alert('Registration failed');
-        }
-    };
 
     return (
         <form

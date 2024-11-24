@@ -9,9 +9,13 @@ const port = process.env.PORT || 5000;
 
 app.use(body_parser.json());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/auth', userRoutes);
+app.use('/auth', userRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
