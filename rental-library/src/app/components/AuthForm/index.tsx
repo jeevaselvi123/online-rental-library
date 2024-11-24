@@ -28,24 +28,30 @@ function AuthForm({ is_login }: { is_login: boolean }) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let response;
-        if (is_login) {
-            response = await login(form_data);
-        }
-        else {
-            response = await sign_up(form_data);
-        }
-        if (response.data) {
-            router.push('/');
-        }
-        console.log(response);
-        set_form_data({
-            email: "",
-            password: "",
-            confirm_password: "",
-        })
-    };
 
+        try {
+            const response = is_login
+                ? await login(form_data)
+                : await sign_up(form_data);
+
+            if (response?.user) {
+                router.push('/');
+            } else {
+                console.error('Unexpected Error Occurred!', response);
+            }
+
+        } catch (error) {
+            console.error('An error occurred during submission:', error);
+            alert('An error occurred. Please try again later.');
+        } finally {
+            // Reset form data
+            set_form_data({
+                email: "",
+                password: "",
+                confirm_password: "",
+            });
+        }
+    };
     useEffect(() => {
         const error_data: { email: string, password: string, confirm_password: string } = { email: '', password: '', confirm_password: '' };
 
@@ -68,50 +74,18 @@ function AuthForm({ is_login }: { is_login: boolean }) {
         }
 
         const validate_confirm_password = () => {
-            if (form_data.password && form_data.confirm_password && form_data.password === form_data.confirm_password) {
+            if (form_data.password !== form_data.confirm_password) {
                 error_data.confirm_password = "Passwords do not match";
-            }
-            else {
+            } else {
                 error_data.confirm_password = '';
             }
-        }
+        };
         validate_email();
         validate_password();
         validate_confirm_password();
 
         set_error_data(error_data);
     }, [form_data]);
-
-    // const handleSignUpSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     const response = await fetch('http://localhost:5000/api/auth/signup', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(form_data),
-    //     });
-
-    //     if (response.ok) {
-    //         router.push('/');
-    //     } else {
-    //         alert('Registration failed');
-    //     }
-    // };
-
-    // const handleLoginSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     const response = await fetch('http://localhost:5000/api/auth/login', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(form_data),
-    //     });
-
-    //     if (response.ok) {
-    //         // alert('Registration successful');
-    //         router.push('/');
-    //     } else {
-    //         alert('Registration failed');
-    //     }
-    // };
 
     return (
         <form
