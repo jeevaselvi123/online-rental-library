@@ -12,20 +12,33 @@ const getAllUsers = async () => {
 
 
 const createUser = async (email, hashedPassword) => {
-    const query = `
+  if (!email || !hashedPassword) {
+    throw new Error('Invalid input data');
+  }
+  const query = `
       INSERT INTO users (email, password_hash)
       VALUES ($1, $2)
       RETURNING id, email;
     `;
-    const values = [email, hashedPassword];
+  const values = [email, hashedPassword];
+  try {
     const result = await pool.query(query, values);
     return result.rows[0];
+  } catch (error) {
+    console.error('Error executing query:', {
+      message: error.message,
+      stack: error.stack,
+      detail: error.detail, // PostgreSQL-specific error detail
+    });
+    throw new Error('Database query failed');
+  }
 };
 
 const findUserByEmail = async (email) => {
   const query = `
     SELECT * FROM users WHERE email = $1;
   `;
+  console.log(query);
   const result = await pool.query(query, [email]);
   return result.rows[0];
 };
