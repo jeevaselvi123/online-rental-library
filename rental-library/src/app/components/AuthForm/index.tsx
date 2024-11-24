@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {sign_up, login} from '../../../api/auth';
+import { sign_up, login } from '../../../api/auth';
 
 function AuthForm({ is_login }: { is_login: boolean }) {
     const [form_data, set_form_data] = useState({
@@ -29,12 +29,16 @@ function AuthForm({ is_login }: { is_login: boolean }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         let response;
-        if(is_login) {
+        if (is_login) {
             response = await login(form_data);
         }
-        else{
+        else {
             response = await sign_up(form_data);
         }
+        if (response.data) {
+            router.push('/');
+        }
+        console.log(response);
         set_form_data({
             email: "",
             password: "",
@@ -43,31 +47,31 @@ function AuthForm({ is_login }: { is_login: boolean }) {
     };
 
     useEffect(() => {
-        const error_data: {email: string, password:string, confirm_password: string} = {email: '', password:'', confirm_password:''};
+        const error_data: { email: string, password: string, confirm_password: string } = { email: '', password: '', confirm_password: '' };
 
         const validate_email = () => {
-            if(form_data.email && !EMAIL_REGEX.test(form_data.email)){
+            if (form_data.email && !EMAIL_REGEX.test(form_data.email)) {
                 error_data.email = 'Invalid email format';
             }
-            else{
-                error_data.email ='';
+            else {
+                error_data.email = '';
             }
         }
 
         const validate_password = () => {
-            if (form_data.password && form_data.password.length < PASSWORD_MIN_LENGTH ){
+            if (form_data.password && form_data.password.length < PASSWORD_MIN_LENGTH) {
                 error_data.password = `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
             }
-            else{
+            else {
                 error_data.password = '';
             }
         }
 
         const validate_confirm_password = () => {
-            if(form_data.password && form_data.confirm_password && form_data.password === form_data.confirm_password){
+            if (form_data.password && form_data.confirm_password && form_data.password === form_data.confirm_password) {
                 error_data.confirm_password = "Passwords do not match";
             }
-            else{
+            else {
                 error_data.confirm_password = '';
             }
         }
