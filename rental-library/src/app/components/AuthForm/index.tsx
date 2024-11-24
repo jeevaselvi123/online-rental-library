@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {sign_up, login} from '../../../api/auth';
 
 function AuthForm({ is_login }: { is_login: boolean }) {
     const [form_data, set_form_data] = useState({
@@ -25,13 +26,14 @@ function AuthForm({ is_login }: { is_login: boolean }) {
     const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     const PASSWORD_MIN_LENGTH = 6;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        let response;
         if(is_login) {
-            handleLoginSubmit(e)
+            response = await login(form_data);
         }
         else{
-            handleSignUpSubmit(e)
+            response = await sign_up(form_data);
         }
         set_form_data({
             email: "",
@@ -76,36 +78,36 @@ function AuthForm({ is_login }: { is_login: boolean }) {
         set_error_data(error_data);
     }, [form_data]);
 
-    const handleSignUpSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form_data),
-        });
+    // const handleSignUpSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     const response = await fetch('http://localhost:5000/api/auth/signup', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(form_data),
+    //     });
 
-        if (response.ok) {
-            router.push('/');
-        } else {
-            alert('Registration failed');
-        }
-    };
+    //     if (response.ok) {
+    //         router.push('/');
+    //     } else {
+    //         alert('Registration failed');
+    //     }
+    // };
 
-    const handleLoginSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form_data),
-        });
+    // const handleLoginSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     const response = await fetch('http://localhost:5000/api/auth/login', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(form_data),
+    //     });
 
-        if (response.ok) {
-            // alert('Registration successful');
-            router.push('/');
-        } else {
-            alert('Registration failed');
-        }
-    };
+    //     if (response.ok) {
+    //         // alert('Registration successful');
+    //         router.push('/');
+    //     } else {
+    //         alert('Registration failed');
+    //     }
+    // };
 
     return (
         <form
