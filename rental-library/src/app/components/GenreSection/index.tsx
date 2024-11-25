@@ -3,17 +3,9 @@ import BookCard from 'app/components/BookCard';
 import React, { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { BookDetails } from 'app/page';
 
-interface GenreBooks {
-    id: number;
-    title: string;
-    author: string;
-    imageUrl: string;
-    description?: string;
-    availability?: boolean;
-}
-
-export default function GenreSection({ genre, books }: { genre: string, books: GenreBooks[] }) {
+export default function GenreSection({ genre, books }: { genre: string, books: BookDetails[] }) {
 
     const [current_page, set_current_page] = useState<number>(1);
 
@@ -30,7 +22,7 @@ export default function GenreSection({ genre, books }: { genre: string, books: G
     const start_index = (current_page - 1) * books_per_page;
     const end_index = Math.min(start_index + books_per_page, books.length); 
 
-    const displayed_books = books.slice(start_index, end_index);
+    const displayed_books = books?.slice(start_index, end_index);
 
     return (
         <div className="mb-8 w-full max-w-screen-2xl mx-auto">
