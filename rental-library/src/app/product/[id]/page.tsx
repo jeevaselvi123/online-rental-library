@@ -1,6 +1,6 @@
 'use client'
 import SharedLayout from 'app/components/SharedLayout';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { fetchBookById, updateBookAvailability } from 'api/books';
@@ -22,6 +22,8 @@ interface RentalDetails {
 function ProductPage() {
     const params = useParams();
     const { id } = params;
+    const token = localStorage.getItem('token');
+    const router = useRouter();
 
     const [bookDetails, setBookDetails] = useState<BookDetails | null>(null);
     const [rented_details, set_rented_details] = useState<RentalDetails | null>(null);
@@ -54,6 +56,10 @@ function ProductPage() {
 
     const handle_rent_button_click = async () => {
         try {
+            if(!token){
+                router.push('/login');
+                return;
+            }
             const rented_details = await rentalBooks(bookDetails?.id)
             set_rented_details(rented_details)
             const rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
