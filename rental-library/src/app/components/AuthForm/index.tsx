@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sign_up, login } from '../../../api/auth';
+import Link from "next/link";
 
 function AuthForm({ is_login }: { is_login: boolean }) {
     const [form_data, set_form_data] = useState({
@@ -35,6 +36,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                 : await sign_up(form_data);
 
             if (response?.user) {
+                localStorage.setItem('token', response.token);
                 router.push('/');
             } else {
                 console.error('Unexpected Error Occurred!', response);
@@ -42,9 +44,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
 
         } catch (error) {
             console.error('An error occurred during submission:', error);
-            alert('An error occurred. Please try again later.');
         } finally {
-            // Reset form data
             set_form_data({
                 email: "",
                 password: "",
@@ -92,6 +92,8 @@ function AuthForm({ is_login }: { is_login: boolean }) {
             onSubmit={handleSubmit}
             className="bg-white shadow-md rounded px-10 pt-6 pb-8 mb-4"
         >
+            <h2 className="text-center text-xl font-bold mb-6">{is_login ? 'Welcome Back!' : 'Welcome to Bookish Bliss'}</h2>
+
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -151,16 +153,23 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                     {error_data.confirm_password && <p className="text-red-600">{error_data.confirm_password}</p>}
                 </div>
             )}
-            <div className="flex items-center justify-between">
+            {is_login && <div className="flex items-center justify-between">
+                <p className="text-center text-sm text-gray-500">
+                    Don't have an account? <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign Up!</Link>
+                </p>
+                 <a href="#" className="text-sm text-blue-500 hover:underline">
+                    Forgot Password?
+                </a>
+            </div>}
+
+            <div className="text-center w-full mb-4 p-4">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="w-3/4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit">
                     {is_login ? 'Login' : 'Sign Up'}
                 </button>
-                {is_login && <a href="#" className="text-sm text-blue-500 hover:underline">
-                    Forgot Password?
-                </a>}
             </div>
+            
         </form>
     );
 }

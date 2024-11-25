@@ -1,5 +1,4 @@
 const rentalModel = require('../models/rentalModel');
-const bookModel = require('../models/bookModel');
 
 // Rent a book
 const rentBook = async (userId, bookId) => {

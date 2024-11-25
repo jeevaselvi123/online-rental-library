@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/rent', authMiddleware, rentalController.rentBook);
+router.post('/', authMiddleware, rentalController.rentBook);
 router.patch('/return/:rentalId', authMiddleware, rentalController.returnBook);
 
 module.exports = router;
