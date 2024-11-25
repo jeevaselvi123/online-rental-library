@@ -28,9 +28,10 @@ const createBook = async (bookData) => {
 };
 
 // Update a book's availability
-const updateBookAvailability = async (id, is_available) => {
-    const query = 'UPDATE books SET is_available = $1 WHERE id = $2 RETURNING *';
-    const { rows } = await pool.query(query, [is_available, id]);
+const updateBookAvailability = async (id, is_available, rented_copies) => {
+    const query = 'UPDATE books SET is_available = $1, rented_copies = $2 WHERE id = $3 RETURNING *';
+    const values = [is_available, rented_copies, id];
+    const { rows } = await pool.query(query, values);
     return rows[0];
 };
 

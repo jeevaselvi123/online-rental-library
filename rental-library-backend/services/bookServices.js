@@ -20,12 +20,12 @@ const createBook = async (bookData) => {
 };
 
 // Update book availability
-const updateBookAvailability = async (id, is_available) => {
+const updateBookAvailability = async (id, is_available, rented_copies) => {
     const book = await bookModel.getBookById(id);
     if (!book) {
         throw new Error(`Book with ID ${id} not found`);
     }
-    return await bookModel.updateBookAvailability(id, is_available);
+    return await bookModel.updateBookAvailability(id, is_available, rented_copies);
 };
 
 // Delete a book

@@ -2,7 +2,6 @@ const userService = require('../services/userServices');
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email,password);
   try {
     const user = await userService.signup( email, password);
     res.status(201).json({ user });

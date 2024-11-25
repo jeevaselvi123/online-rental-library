@@ -34,9 +34,9 @@ const createBook = async (req, res) => {
 // Update book availability
 const updateBookAvailability = async (req, res) => {
     const { id } = req.params;
-    const { is_available } = req.body;
+    const { is_available, rented_copies } = req.body;
     try {
-        const book = await bookService.updateBookAvailability(id, is_available);
+        const book = await bookService.updateBookAvailability(id, is_available, rented_copies);
         res.status(200).json(book);
     } catch (error) {
         res.status(404).json({ error: error.message });

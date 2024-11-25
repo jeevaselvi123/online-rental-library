@@ -8,7 +8,7 @@ const rentBook = async (userId, bookId) => {
     }
 
     const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 7); // Due date is 7 days from now
+    dueDate.setDate(dueDate.getDate() + 10); // Due date is 10 days from now
 
     return await rentalModel.createRental(userId, bookId, dueDate);
 };

@@ -13,7 +13,7 @@ app.use(body_parser.json());
 app.use(express.json());
 app.use(cors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
