@@ -56,8 +56,8 @@ function ProductPage() {
         try {
             const rented_details = await rentalBooks(bookDetails?.id)
             set_rented_details(rented_details)
-            let rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
-            let is_available = (bookDetails?.total_copies && rented_copies) && bookDetails?.total_copies <= rented_copies ? true : false;
+            const rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
+            const is_available = (bookDetails?.total_copies && rented_copies) && bookDetails?.total_copies <= rented_copies ? true : false;
             const updated_book_details = await updateBookAvailability(bookDetails?.id, is_available, rented_copies);
             setBookDetails(updated_book_details);
             alert('Books rented!')

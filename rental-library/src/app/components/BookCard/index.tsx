@@ -1,6 +1,4 @@
 'use client'
-import { updateBookAvailability } from "api/books";
-import { rentalBooks } from "api/booksRent";
 import { BookDetails } from "app/page";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
