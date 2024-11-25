@@ -5,15 +5,6 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { BookDetails } from 'app/page';
 
-interface GenreBooks {
-    id: number;
-    title: string;
-    author: string;
-    imageUrl: string;
-    description?: string;
-    availability?: boolean;
-}
-
 export default function GenreSection({ genre, books }: { genre: string, books: BookDetails[] }) {
 
     const [current_page, set_current_page] = useState<number>(1);

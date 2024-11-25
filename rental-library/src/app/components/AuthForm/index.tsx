@@ -155,7 +155,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
             )}
             {is_login && <div className="flex items-center justify-between">
                 <p className="text-center text-sm text-gray-500">
-                    Don't have an account? <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign Up!</Link>
+                    Don&apost have an account? <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign Up!</Link>
                 </p>
                  <a href="#" className="text-sm text-blue-500 hover:underline">
                     Forgot Password?

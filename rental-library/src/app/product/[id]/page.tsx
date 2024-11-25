@@ -15,6 +15,7 @@ function ProductPage() {
     const { id } = params;
 
     const [bookDetails, setBookDetails] = useState<BookDetails | null>(null);
+    const [rented_details, set_rented_details] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -31,6 +32,7 @@ function ProductPage() {
                 setBookDetails(response);
             } catch (err) {
                 // setError(err);
+                console.log(err);
             } finally {
                 setIsLoading(false);
             }
@@ -43,9 +45,9 @@ function ProductPage() {
 
     const handle_rent_button_click = async () => {
         try{
-            const book_rented = await rentalBooks(bookDetails?.id)
-            console.log(book_rented);
-            alert('Book rented out');
+            const rented_details = await rentalBooks(bookDetails?.id)
+            alert('Book rented!');
+            set_rented_details(rented_details)
         } catch(err){
             console.log('Error occurred while processing the payment', err);
         }
@@ -62,6 +64,7 @@ function ProductPage() {
     if (!bookDetails) {
         return <p>Book Not Found</p>
     }
+    console.log(rented_details);
     return (
         <SharedLayout>
             <div className="flex flex-col md:flex-row gap-8 pt-12 pl-20 md:pl-0">
@@ -88,7 +91,7 @@ function ProductPage() {
                     </div>
                     <p className="text-green-500 mb-4">{bookDetails.is_available ? 'Available' : 'Unavailable'}</p>
                     <div className="flex gap-4">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handle_rent_button_click}>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handle_rent_button_click} disabled={!bookDetails.is_available}>
                             Rent Now
                         </button>
                         <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">

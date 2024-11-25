@@ -1,9 +1,13 @@
 import { BookDetails } from "app/page";
 
+type BooksByCategory = {
+    [category: string]: BookDetails[]; // Index signature allowing dynamic string keys
+};
+
 export default function groupBooksByCategory(books: BookDetails[] | null) {
     if(!books)
         return [];
-    const categorizedBooks: any = {};
+    const categorizedBooks: BooksByCategory = {};
 
     books?.forEach((book) => {
         const category = book.category;

@@ -21,6 +21,9 @@ export type BookDetails = {
     total_copies: number;
     rented_copies: number;
 }
+type BooksByCategory = {
+  [category: string]: BookDetails[];
+};
 
 export default function Home() {
 
@@ -57,7 +60,7 @@ export default function Home() {
   if (!bookDetails) {
       return <p>Something Went Wrong!!</p>;
   }
-  const books_by_category = groupBooksByCategory(bookDetails)
+  const books_by_category = groupBooksByCategory(bookDetails) as BooksByCategory;
 
   return (
     <SharedLayout>
