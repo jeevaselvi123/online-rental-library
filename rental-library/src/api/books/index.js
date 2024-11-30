@@ -1,9 +1,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
-const userToken = localStorage.getItem('token'); 
 
 export const fetchBooks = async () => {
     try {
-        console.log('called fetch books', userToken);
+        const userToken = localStorage.getItem('token'); 
         // const response = await fetch(`${API_BASE_URL}/books`);
         const response = await fetch(`${API_BASE_URL}/books`, {
             method: 'GET',
