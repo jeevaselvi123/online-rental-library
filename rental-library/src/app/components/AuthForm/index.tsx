@@ -4,8 +4,17 @@ import { useRouter } from "next/navigation";
 import { sign_up, login } from '../../../api/auth';
 import Link from "next/link";
 
+interface FormData {
+    email: string;
+    password: string;
+    confirm_password: string;
+    name?: string;
+    address?: string;
+    phone_number?: number;
+}
+
 function AuthForm({ is_login }: { is_login: boolean }) {
-    const [form_data, set_form_data] = useState({
+    const [form_data, set_form_data] = useState<FormData>({
         email: "",
         password: "",
         confirm_password: "",
@@ -17,7 +26,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
         confirm_password: "",
     });
     const router = useRouter();
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         set_form_data({ ...form_data, [e.target.name]: e.target.value });
     };
 
@@ -133,7 +142,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                 {error_data.password && <p className="text-red-600">{error_data.password}</p>}
             </div>
             {!is_login && (
-                <div className="mb-6">
+                <><div className="mb-6">
                     <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="password"
@@ -148,16 +157,63 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                         name="confirm_password"
                         placeholder="******"
                         value={form_data.confirm_password}
-                        onChange={handleChange}
-                    />
+                        onChange={handleChange} />
                     {error_data.confirm_password && <p className="text-red-600">{error_data.confirm_password}</p>}
-                </div>
+                </div><div className="mb-6">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="name"
+                        >
+                            Name
+                        </label>
+                        <input
+                            className={input_class_names}
+                            id="name"
+                            type="text"
+                            name="name"
+                            placeholder="Enter Your Name"
+                            value={form_data.name ?? ''}
+                            onChange={handleChange} />
+                        {/* {error_data.name && <p className="text-red-600">{error_data.name}</p>} */}
+                    </div><div className="mb-6">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="phone"
+                        >
+                            Phone Number
+                        </label>
+                        <input
+                            className={input_class_names}
+                            id="phone"
+                            type="tel"
+                            name="phone"
+                            placeholder="Enter Phone Number"
+                            value={form_data.phone_number}
+                            onChange={handleChange} />
+                        {/* {error_data.phone && <p className="text-red-600">{error_data.phone}</p>} */}
+                    </div><div className="mb-6">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="address"
+                        >
+                            Address
+                        </label>
+                        <textarea
+                            className={input_class_names}
+                            id="address"
+                            name="address"
+                            placeholder="Enter Your Address"
+                            value={form_data.address ?? ''}
+                            onChange={handleChange} />
+                        {/* {error_data.address && <p className="text-red-600">{error_data.address}</p>} */}
+                    </div></>
+
             )}
             {is_login && <div className="flex items-center justify-between">
                 <p className="text-center text-sm text-gray-500">
                     Don&apos;t have an account? <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign Up!</Link>
                 </p>
-                 <a href="#" className="text-sm text-blue-500 hover:underline">
+                <a href="#" className="text-sm text-blue-500 hover:underline">
                     Forgot Password?
                 </a>
             </div>}
@@ -169,7 +225,7 @@ function AuthForm({ is_login }: { is_login: boolean }) {
                     {is_login ? 'Login' : 'Sign Up'}
                 </button>
             </div>
-            
+
         </form>
     );
 }

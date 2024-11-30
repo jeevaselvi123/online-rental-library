@@ -11,16 +11,17 @@ const getAllUsers = async () => {
 };
 
 
-const createUser = async (email, hashedPassword) => {
+const createUser = async (email, hashedPassword, name=null, phone=null, address=null) => {
   if (!email || !hashedPassword) {
     throw new Error('Invalid input data');
   }
   const query = `
-      INSERT INTO users (email, password_hash)
-      VALUES ($1, $2)
-      RETURNING id, email;
-    `;
-  const values = [email, hashedPassword];
+  INSERT INTO users (email, password_hash, name, address, phone_number)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, email, name, address, phone_number;
+`;
+
+const values = [email, hashedPassword, name, address, phone];
   try {
     const result = await pool.query(query, values);
     return result.rows[0];
