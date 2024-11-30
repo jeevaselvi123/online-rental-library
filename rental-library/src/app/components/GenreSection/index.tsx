@@ -13,6 +13,9 @@ export default function GenreSection({ genre, books }: { genre: string, books: B
         set_current_page((prevPage) => Math.max(prevPage - 1, 1));
     };
 
+    if(!books)  
+        return <p>Something went wrong!</p>
+
     const handle_next = () => {
         set_current_page((prevPage) => Math.min(prevPage
             + 1, Math.ceil(books.length / 4))); 
@@ -38,9 +41,9 @@ export default function GenreSection({ genre, books }: { genre: string, books: B
                 </div>
             </div>
             <div className="grid grid-cols-4 gap-4">
-                {displayed_books.map((book) => (
+                {displayed_books ? displayed_books?.map((book) => (
                     <BookCard key={book.id} book={book} />
-                ))}
+                )) : <p>Unable to display books</p>}
             </div>
         </div>
     );

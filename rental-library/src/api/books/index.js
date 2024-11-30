@@ -1,8 +1,17 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+const userToken = localStorage.getItem('token'); 
 
 export const fetchBooks = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/books`);
+        console.log('called fetch books', userToken);
+        // const response = await fetch(`${API_BASE_URL}/books`);
+        const response = await fetch(`${API_BASE_URL}/books`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userToken}`
+            }
+        });
         const books = await response.json();
         return books;
     } catch (error) {
@@ -10,7 +19,7 @@ export const fetchBooks = async () => {
     }
 };
 
-export const fetchBookById = async(id) => {
+export const fetchBookById = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/books/${id}`);
         return await response.json();;
@@ -20,7 +29,7 @@ export const fetchBookById = async(id) => {
 }
 
 export const updateBookAvailability = async (id, is_available, rented_copies) => {
-    try{
+    try {
         const response = await fetch(`${API_BASE_URL}/books/${id}/availability`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -32,7 +41,7 @@ export const updateBookAvailability = async (id, is_available, rented_copies) =>
         }
         return await response.json()
     }
-    catch(error){
+    catch (error) {
         console.error('Error occurred while updating the availability:', error);
     }
 }

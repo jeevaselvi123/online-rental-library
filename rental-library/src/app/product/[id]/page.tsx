@@ -8,6 +8,7 @@ import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import { rentalBooks } from '../../../api/booksRent'
+import BoxModal from 'app/components/BoxModal';
 
 interface RentalDetails {
     id: number;
@@ -29,6 +30,7 @@ function ProductPage() {
     const [rented_details, set_rented_details] = useState<RentalDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [is_modal_open, set_is_open_modal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -56,10 +58,14 @@ function ProductPage() {
 
     const handle_rent_button_click = async () => {
         try {
-            if(!token){
+            if (!token) {
                 router.push('/login');
                 return;
             }
+
+            // Redirect to the mock payment page
+            router.push(`/mock-payment/${id}?rentalPrice=${bookDetails?.rental_price}`);
+
             const rented_details = await rentalBooks(bookDetails?.id)
             set_rented_details(rented_details)
             const rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
@@ -71,6 +77,10 @@ function ProductPage() {
             console.log('Error occurred while processing the payment', err);
         }
     }
+
+    const handleShareClick = () => {
+        set_is_open_modal(true);
+    };
 
     if (isLoading) {
         return <p>Loading book details...</p>;
@@ -95,10 +105,11 @@ function ProductPage() {
                         <button className="text-gray-500 hover:text-gray-700 mr-2 p-6">
                             <FavoriteBorderIcon />
                         </button>
-                        <button className="text-gray-500 hover:text-gray-700 p-6">
+                        <button className="text-gray-500 hover:text-gray-700 p-6" onClick={handleShareClick}>
                             <ShareIcon />
                         </button>
                     </div>
+                    <BoxModal open={is_modal_open} onClose={() => set_is_open_modal(false)} />
                 </div>
                 <div className="md:w-1/2">
                     <h1 className="text-3xl font-bold mb-4">{bookDetails.title}</h1>
@@ -113,10 +124,10 @@ function ProductPage() {
                         <p className='pl-6'><strong>Total Rent: </strong> {bookDetails.rental_price}</p>
                     </div>
                     {/* TODO: Update the due date in product page */}
-                    {/* {rented_details && <div className="flex flex-row mb-4">
+                    {rented_details && <div className="flex flex-row mb-4">
                         <p><strong>Due Date: </strong> {new Date(rented_details?.due_date).toDateString()}</p>
                         <p className='pl-6'><strong>Fine: </strong> {rented_details?.fine || 0}</p>
-                    </div>} */}
+                    </div>}
                     <p className={`text-${bookDetails.is_available ? 'green-500' : 'red-600'}`}>
                         {bookDetails.is_available ? 'Available for rent!!' : 'Currently Unavailable!!'}
                     </p>
