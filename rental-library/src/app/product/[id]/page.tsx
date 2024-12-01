@@ -7,7 +7,6 @@ import { fetchBookById } from 'api/books';
 import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
-import { rentalBooks } from '../../../api/booksRent'
 import BoxModal from 'app/components/BoxModal';
 
 export interface RentalDetails {
