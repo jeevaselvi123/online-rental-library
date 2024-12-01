@@ -121,9 +121,11 @@ export default function ProductPage() {
                         <p><strong>Published At: </strong> {new Date(bookDetails.published_date).toLocaleDateString()}</p>
                         <p className='pl-6'><strong>Total Rent: </strong> {bookDetails.rental_price}</p>
                     </div>
-                    <p className={`${bookDetails.is_available} ? text-green-600 : 'text-red-600'}`}>
-                        {bookDetails.is_available ? 'Available for rent!!' : 'Currently Unavailable!!'}
-                    </p>
+                    {bookDetails.is_available ? <p className='text-green-600'>
+                         Available for rent!!
+                    </p> : <p className='text-red-600'>
+                        Currently unavailable!!
+                    </p>}
                     <div className="flex gap-4">
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handle_rent_button_click} disabled={!bookDetails.is_available}>
                             Rent Now
