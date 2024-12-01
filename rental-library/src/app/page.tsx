@@ -57,10 +57,10 @@ export default function Home() {
       return <p>Error: {error}</p>; // Display error message
   }
 
-  // if (!bookDetails) {
-  //     return <p>Something Went Wrong!!</p>;
-  // }
-  const books_by_category = groupBooksByCategory(bookDetails) as BooksByCategory;
+  if (!bookDetails) {
+      return <p>Something Went Wrong!!</p>;
+  }
+  const books_by_category = groupBooksByCategory(bookDetails) as BooksByCategory ;
 
   return (
     <SharedLayout>

@@ -1,15 +1,16 @@
 'use client'
 import SharedLayout from 'app/components/SharedLayout';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { fetchBookById, updateBookAvailability } from 'api/books';
 import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
-import { rentalBooks } from '../../../api/booksRent'
+import BoxModal from 'app/components/BoxModal';
+import { returnBook } from 'api/booksRent';
 
-interface RentalDetails {
+export interface RentalDetails {
     id: number;
     user_id: number;
     book_id: number;
@@ -17,18 +18,21 @@ interface RentalDetails {
     due_date: string;
     fine: number;
     payment_status: boolean;
+    return_date: string;
 }
 
-function ProductPage() {
+export default function ProductPage() {
+    const router = useRouter();
     const params = useParams();
+    const search_params = useSearchParams();
     const { id } = params;
     const token = localStorage.getItem('token');
-    const router = useRouter();
 
     const [bookDetails, setBookDetails] = useState<BookDetails | null>(null);
-    const [rented_details, set_rented_details] = useState<RentalDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [is_modal_open, set_is_open_modal] = useState<boolean>(false);
+    const [rentalReturn, setRentalReturn] = useState<RentalDetails | null>(null);
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -56,19 +60,36 @@ function ProductPage() {
 
     const handle_rent_button_click = async () => {
         try {
-            if(!token){
+            if (!token) {
                 router.push('/login');
                 return;
             }
-            const rented_details = await rentalBooks(bookDetails?.id)
-            set_rented_details(rented_details)
-            const rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
-            const is_available = (bookDetails?.total_copies && rented_copies) && bookDetails?.total_copies <= rented_copies ? true : false;
-            const updated_book_details = await updateBookAvailability(bookDetails?.id, is_available, rented_copies);
-            setBookDetails(updated_book_details);
-            alert('Books rented!')
+            // Redirect to the mock payment page
+            router.push(`/confirmation/${bookDetails?.id}`);
+
         } catch (err) {
             console.log('Error occurred while processing the payment', err);
+        }
+    }
+
+    const handleShareClick = () => {
+        set_is_open_modal(true);
+    };
+
+    const handleReturnBook = async () => {
+        const rentalId = search_params.get('rental_id')
+        try {
+            const response = await returnBook(rentalId);
+            if (!response) {
+                throw new Error("Something error occurred!");
+            }
+            setRentalReturn(response);
+            const isAvailable = bookDetails!.total_copies > bookDetails!.rented_copies - 1;
+            const updatedBookDetails = await updateBookAvailability(params.id, isAvailable, bookDetails!.rented_copies - 1);
+            setBookDetails(updatedBookDetails);
+            alert('Successfully Returned the book!');
+        } catch (err) {
+            console.log(err);
         }
     }
 
@@ -83,7 +104,6 @@ function ProductPage() {
     if (!bookDetails) {
         return <p>Book Not Found</p>
     }
-    console.log(rented_details);
     return (
         <SharedLayout>
             <div className="flex flex-col md:flex-row gap-8 pt-12 pl-20 md:pl-0">
@@ -95,10 +115,11 @@ function ProductPage() {
                         <button className="text-gray-500 hover:text-gray-700 mr-2 p-6">
                             <FavoriteBorderIcon />
                         </button>
-                        <button className="text-gray-500 hover:text-gray-700 p-6">
+                        <button className="text-gray-500 hover:text-gray-700 p-6" onClick={handleShareClick}>
                             <ShareIcon />
                         </button>
                     </div>
+                    <BoxModal open={is_modal_open} onClose={() => set_is_open_modal(false)} />
                 </div>
                 <div className="md:w-1/2">
                     <h1 className="text-3xl font-bold mb-4">{bookDetails.title}</h1>
@@ -112,17 +133,25 @@ function ProductPage() {
                         <p><strong>Published At: </strong> {new Date(bookDetails.published_date).toLocaleDateString()}</p>
                         <p className='pl-6'><strong>Total Rent: </strong> {bookDetails.rental_price}</p>
                     </div>
-                    {/* TODO: Update the due date in product page */}
-                    {/* {rented_details && <div className="flex flex-row mb-4">
-                        <p><strong>Due Date: </strong> {new Date(rented_details?.due_date).toDateString()}</p>
-                        <p className='pl-6'><strong>Fine: </strong> {rented_details?.fine || 0}</p>
-                    </div>} */}
-                    <p className={`text-${bookDetails.is_available ? 'green-500' : 'red-600'}`}>
-                        {bookDetails.is_available ? 'Available for rent!!' : 'Currently Unavailable!!'}
-                    </p>
+                    {bookDetails.is_available ? <p className='text-green-600'>
+                        Available for rent!!
+                    </p> : <p className='text-red-600'>
+                        Currently unavailable!!
+                    </p>}
+                    {rentalReturn &&
+                        <>
+                            <h4 className='font-semibold mb-4'>Return Detail:</h4>
+                            <div className='flex flex-row mb-2'>
+                                <p><strong>Returned Date: </strong> {new Date(rentalReturn.return_date).toLocaleDateString()}</p>
+                                <p className='pl-6'><strong>Fine: </strong> {rentalReturn.fine}</p>
+                            </div>
+                        </>}
                     <div className="flex gap-4">
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handle_rent_button_click} disabled={!bookDetails.is_available}>
                             Rent Now
+                        </button>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleReturnBook}>
+                            Return
                         </button>
                         <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">
                             Review
@@ -133,5 +162,3 @@ function ProductPage() {
         </SharedLayout>
     );
 }
-
-export default ProductPage;

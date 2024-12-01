@@ -1,9 +1,9 @@
 const userService = require('../services/userServices');
 
 const signup = async (req, res) => {
-  const { email, password } = req.body;
+   const { email, password, name, phone, address } = req.body;
   try {
-    const user = await userService.signup( email, password);
+    const user = await userService.signup(email, password, name, phone, address);
     res.status(201).json({ user });
   } catch (error) {
     res.status(500).json({ error: 'User registration failed' });

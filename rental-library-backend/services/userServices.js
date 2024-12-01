@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 
-const signup = async (email, password) => {
+const signup = async (email, password, name, phone, address) => {
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await userModel.createUser(email, hashedPassword);
+  const user = await userModel.createUser(email, hashedPassword, name, phone, address);
    if (!user) {
     throw new Error('Unable to create the user');
   }
