@@ -3,14 +3,14 @@ import SharedLayout from 'app/components/SharedLayout';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { fetchBookById, updateBookAvailability } from 'api/books';
+import { fetchBookById } from 'api/books';
 import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import { rentalBooks } from '../../../api/booksRent'
 import BoxModal from 'app/components/BoxModal';
 
-interface RentalDetails {
+export interface RentalDetails {
     id: number;
     user_id: number;
     book_id: number;
@@ -18,16 +18,16 @@ interface RentalDetails {
     due_date: string;
     fine: number;
     payment_status: boolean;
+    return_date: string;
 }
 
-function ProductPage() {
+export default function ProductPage() {
+    const router = useRouter();
     const params = useParams();
     const { id } = params;
     const token = localStorage.getItem('token');
-    const router = useRouter();
 
     const [bookDetails, setBookDetails] = useState<BookDetails | null>(null);
-    const [rented_details, set_rented_details] = useState<RentalDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [is_modal_open, set_is_open_modal] = useState<boolean>(false);
@@ -62,25 +62,24 @@ function ProductPage() {
                 router.push('/login');
                 return;
             }
-
             // Redirect to the mock payment page
-            router.push(`/mock-payment/${id}?rentalPrice=${bookDetails?.rental_price}`);
+            router.push(`/confirmation/${bookDetails?.id}`);
 
-            const rented_details = await rentalBooks(bookDetails?.id)
-            set_rented_details(rented_details)
-            const rented_copies = bookDetails?.rented_copies && bookDetails?.rented_copies + 1;
-            const is_available = (bookDetails?.total_copies && rented_copies) && bookDetails?.total_copies <= rented_copies ? true : false;
-            const updated_book_details = await updateBookAvailability(bookDetails?.id, is_available, rented_copies);
-            setBookDetails(updated_book_details);
-            alert('Books rented!')
         } catch (err) {
             console.log('Error occurred while processing the payment', err);
         }
     }
 
+
+
     const handleShareClick = () => {
         set_is_open_modal(true);
     };
+
+    // const handleReturnBook = (id: number) => {
+    //     alert('return book clicked!');
+    //     console.log(id);
+    // }
 
     if (isLoading) {
         return <p>Loading book details...</p>;
@@ -93,7 +92,6 @@ function ProductPage() {
     if (!bookDetails) {
         return <p>Book Not Found</p>
     }
-    console.log(rented_details);
     return (
         <SharedLayout>
             <div className="flex flex-col md:flex-row gap-8 pt-12 pl-20 md:pl-0">
@@ -123,12 +121,7 @@ function ProductPage() {
                         <p><strong>Published At: </strong> {new Date(bookDetails.published_date).toLocaleDateString()}</p>
                         <p className='pl-6'><strong>Total Rent: </strong> {bookDetails.rental_price}</p>
                     </div>
-                    {/* TODO: Update the due date in product page */}
-                    {rented_details && <div className="flex flex-row mb-4">
-                        <p><strong>Due Date: </strong> {new Date(rented_details?.due_date).toDateString()}</p>
-                        <p className='pl-6'><strong>Fine: </strong> {rented_details?.fine || 0}</p>
-                    </div>}
-                    <p className={`text-${bookDetails.is_available ? 'green-500' : 'red-600'}`}>
+                    <p className={`${bookDetails.is_available} ? text-green-600 : 'text-red-600'}`}>
                         {bookDetails.is_available ? 'Available for rent!!' : 'Currently Unavailable!!'}
                     </p>
                     <div className="flex gap-4">
@@ -144,5 +137,3 @@ function ProductPage() {
         </SharedLayout>
     );
 }
-
-export default ProductPage;

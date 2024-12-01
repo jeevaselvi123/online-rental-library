@@ -1,13 +1,13 @@
 const pool = require('../config/database.config');
 
 // Create a rental record
-const createRental = async (userId, bookId, dueDate) => {
+const createRental = async (userId, bookId, dueDate, paymentStatus) => {
     const query = `
-        INSERT INTO rentals (user_id, book_id, due_date)
-        VALUES ($1, $2, $3)
+        INSERT INTO rentals (user_id, book_id, due_date, payment_status)
+        VALUES ($1, $2, $3, $4)
         RETURNING *;
     `;
-    const { rows } = await pool.query(query, [userId, bookId, dueDate]);
+    const { rows } = await pool.query(query, [userId, bookId, dueDate,paymentStatus]);
     return rows[0];
 };
 
