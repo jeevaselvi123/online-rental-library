@@ -40,8 +40,6 @@ export default function ConfirmationPage() {
             const rentedDetails = await rentalBooks(params.id);
             setRentalDetails(rentedDetails);
 
-            console.log(rentalDetails);
-
             // Update book availability
             const isAvailable = bookDetails!.total_copies > bookDetails!.rented_copies + 1;
             await updateBookAvailability(params.id, isAvailable, bookDetails!.rented_copies + 1);
@@ -55,7 +53,9 @@ export default function ConfirmationPage() {
                 setCountdown(--countdownValue);
                 if (countdownValue <= 0) {
                     clearInterval(intervalId);
-                    router.push(`/product/${params.id}`); // Redirect only after countdown
+                    if (rentedDetails?.id) {
+                        router.push(`/product/${params.id}?rental_id=${rentedDetails.id}`);
+                    }
                 }
             }, 1000);
         } catch (err) {
@@ -76,7 +76,7 @@ export default function ConfirmationPage() {
                 <div className="container w-1/2 items-center justify-center mx-auto">
                     <h2 className="text-2xl font-bold py-4">Confirm Your Rental</h2>
                     <p className="text-lg font-normal pb-2">Book: {bookDetails?.title}</p>
-                    <p className=' text-lg font-normal pb-2'>Please pay the rental fee of {bookDetails?.rental_price}</p>
+                    {!isRentalSuccess ? <p className=' text-lg font-normal pb-2'>Please pay the rental fee of {bookDetails?.rental_price}</p> : <p className=' text-lg font-normal pb-2'>Amount Paid: ${bookDetails?.rental_price}</p>}
                     <p>
                         Status:
                         {bookDetails?.is_available ? (
@@ -95,11 +95,10 @@ export default function ConfirmationPage() {
                         </button>
                     )}
                     {isRentalSuccess && (
-                        <p>
-                            <span className="font-bold text-xl">Due Date: {rentalDetails?.due_date}</span>
-                            Your rental request has been submitted! Redirecting to the product page in{" "}
-                            <span>{countdown}</span> seconds...
-                        </p>
+                        <div>
+                            <p>Due Date: {new Date(rentalDetails?.due_date ?? '').toLocaleDateString()}</p>
+                            <p>Your rental request has been submitted! Redirecting to the product page in {countdown} seconds...</p>
+                        </div>
                     )}
                 </div>
             </div>

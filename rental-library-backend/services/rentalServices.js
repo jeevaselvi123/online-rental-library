@@ -23,7 +23,7 @@ const returnBook = async (rentalId) => {
 
     const returnDate = new Date();
     const dueDate = new Date(rental.due_date);
-    const fine = returnDate > dueDate ? (returnDate - dueDate) / (1000 * 60 * 60 * 24) * 10 : 0; // $10/day fine
+    const fine = returnDate > dueDate ? (returnDate - dueDate) / (1000 * 60 * 60 * 24) * 10 : 0; // 10/day fine
 
     return await rentalModel.updateRentalReturn(rentalId, returnDate, fine);
 };

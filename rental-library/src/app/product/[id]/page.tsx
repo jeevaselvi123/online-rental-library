@@ -1,13 +1,14 @@
 'use client'
 import SharedLayout from 'app/components/SharedLayout';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { fetchBookById } from 'api/books';
+import { fetchBookById, updateBookAvailability } from 'api/books';
 import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import BoxModal from 'app/components/BoxModal';
+import { returnBook } from 'api/booksRent';
 
 export interface RentalDetails {
     id: number;
@@ -23,6 +24,7 @@ export interface RentalDetails {
 export default function ProductPage() {
     const router = useRouter();
     const params = useParams();
+    const search_params = useSearchParams();
     const { id } = params;
     const token = localStorage.getItem('token');
 
@@ -30,6 +32,7 @@ export default function ProductPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [is_modal_open, set_is_open_modal] = useState<boolean>(false);
+    const [rentalReturn, setRentalReturn] = useState<RentalDetails | null>(null);
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -69,16 +72,26 @@ export default function ProductPage() {
         }
     }
 
-
-
     const handleShareClick = () => {
         set_is_open_modal(true);
     };
 
-    // const handleReturnBook = (id: number) => {
-    //     alert('return book clicked!');
-    //     console.log(id);
-    // }
+    const handleReturnBook = async () => {
+        const rentalId = search_params.get('rental_id')
+        try {
+            const response = await returnBook(rentalId);
+            if (!response) {
+                throw new Error("Something error occurred!");
+            }
+            setRentalReturn(response);
+            const isAvailable = bookDetails!.total_copies > bookDetails!.rented_copies - 1;
+            const updatedBookDetails = await updateBookAvailability(params.id, isAvailable, bookDetails!.rented_copies - 1);
+            setBookDetails(updatedBookDetails);
+            alert('Successfully Returned the book!');
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     if (isLoading) {
         return <p>Loading book details...</p>;
@@ -121,13 +134,24 @@ export default function ProductPage() {
                         <p className='pl-6'><strong>Total Rent: </strong> {bookDetails.rental_price}</p>
                     </div>
                     {bookDetails.is_available ? <p className='text-green-600'>
-                         Available for rent!!
+                        Available for rent!!
                     </p> : <p className='text-red-600'>
                         Currently unavailable!!
                     </p>}
+                    {rentalReturn &&
+                        <>
+                            <h4 className='font-semibold mb-4'>Return Detail:</h4>
+                            <div className='flex flex-row mb-2'>
+                                <p><strong>Returned Date: </strong> {new Date(rentalReturn.return_date).toLocaleDateString()}</p>
+                                <p className='pl-6'><strong>Fine: </strong> {rentalReturn.fine}</p>
+                            </div>
+                        </>}
                     <div className="flex gap-4">
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handle_rent_button_click} disabled={!bookDetails.is_available}>
                             Rent Now
+                        </button>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleReturnBook}>
+                            Return
                         </button>
                         <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">
                             Review
