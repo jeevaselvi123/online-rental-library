@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { fetchBookById, updateBookAvailability } from 'api/books';
 import { BookDetails } from 'app/page';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import BoxModal from 'app/components/BoxModal';
 import { returnBook } from 'api/booksRent';
@@ -32,6 +33,7 @@ export default function ProductPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [is_modal_open, set_is_open_modal] = useState<boolean>(false);
+    const [is_favourite_icon_clicked, set_is_favourite_icon] = useState<boolean>(false);
     const [rentalReturn, setRentalReturn] = useState<RentalDetails | null>(null);
 
     useEffect(() => {
@@ -117,8 +119,8 @@ export default function ProductPage() {
                         <Image src='/background.jpg' alt='Title' width={200} height={200} className="w-full h-96 object-cover rounded-lg" />
                     </div>
                     <div className="flex justify-center">
-                        <button className="text-gray-500 hover:text-gray-700 mr-2 p-6">
-                            <FavoriteBorderIcon />
+                        <button className="text-gray-500 hover:text-gray-700 mr-2 p-6" onClick={() => set_is_favourite_icon(!is_favourite_icon_clicked)}>
+                            {!is_favourite_icon_clicked ? <FavoriteBorderIcon /> : <FavoriteIcon />}
                         </button>
                         <button className="text-gray-500 hover:text-gray-700 p-6" onClick={handleShareClick}>
                             <ShareIcon />
@@ -147,7 +149,7 @@ export default function ProductPage() {
                         <>
                             <h4 className='font-semibold mb-4'>Return Detail:</h4>
                             <div className='flex flex-row mb-2'>
-                                <p><strong>Returned Date: </strong> {new Date(rentalReturn.return_date).toLocaleDateString()}</p>
+                                <p><strong>Returned Date: </strong> {new Date().toLocaleDateString()}</p>
                                 <p className='pl-6'><strong>Fine: </strong> {rentalReturn.fine}</p>
                             </div>
                         </>}
