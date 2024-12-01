@@ -77,8 +77,13 @@ export default function ProductPage() {
     };
 
     const handleReturnBook = async () => {
-        const rentalId = search_params.get('rental_id')
         try {
+            if (!token) {
+                router.push('/login');
+                return;
+            }
+            const rentalId = search_params.get('rental_id');
+
             const response = await returnBook(rentalId);
             if (!response) {
                 throw new Error("Something error occurred!");
